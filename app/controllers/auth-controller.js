@@ -8,42 +8,29 @@ const generateAccessToken = (userId) => {
 };
 
 const login = async (req, res) => {
-
-    const { email, password } = req.body;
-
-    const missingParam = validateRequiredParams(req.body, ["email", "password"]);
-
-    if (missingParam) return res.status(400).json({ error: missingParam });
-
-    const connection = mysqlConnection;
-    connection.query(`SELECT * FROM accounts;`, (error, results, fields) => {
-        if (error) throw error;
-        console.log('Solución: ', results);
-    });
-
     try {
-        if (existingUser) {
-            if (!existingUser.password) {
-                return res.status(401).json({ error: "Invalid credentials." });
-            }
 
-            const passwordMatch = await bcrypt.compare(
-                password,
-                existingUser.password
-            );
+        const { username, password } = req.body;
 
-            if (passwordMatch) {
-                return res.status(200).json({
-                    userId: existingUser.userId,
-                    email: existingUser.email,
-                    access_token: generateAccessToken(existingUser.userId),
-                });
-            } else {
-                return res.status(401).json({ error: "Invalid credentials. " });
+        const missingParam = validateRequiredParams(req.body, ["username", "password"]);
+
+        if (missingParam) return res.status(400).json({ error: missingParam });
+
+        const connection = mysqlConnection;
+
+        let existingUser = false;
+
+        connection.query(
+            `SELECT * FROM accounts WHERE username=${username} AND password=${password};`,
+            (error, results, _) => {
+                if (error) throw error;
+                if (results.length === 0) return res.status(401).json({ error: 'Invalid credentials.' });
+
+                existingUser = results[0];
             }
-        } else {
-            return res.status(401).json({ error: "Invalid credentials. " });
-        }
+        );
+
+        return res.status(200).send({ message: 'User logged in successfully', token: generateAccessToken(existingUser.id) });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
