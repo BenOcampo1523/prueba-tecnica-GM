@@ -16,9 +16,10 @@ const login = async (req, res) => {
     if (missingParam) return res.status(400).json({ error: missingParam });
 
     const connection = mysqlConnection;
-    const result = connection.query(`SELECT * FROM accounts;`);
-    //const result = connection.query(`SELECT * FROM accounts WHERE username='${email}' AND password='${password}'`);
-    console.log(result);
+    connection.query(`SELECT * FROM accounts;`, (error, results, fields) => {
+        if (error) throw error;
+        console.log('Solución: ', results);
+    });
 
     try {
         if (existingUser) {
