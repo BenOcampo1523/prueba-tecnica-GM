@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
+// Importar utils
 const validateRequiredParams = require('../utils/validateRequiredParams');
 const executeQuery = require('../utils/executeQuery');
 
@@ -17,13 +19,13 @@ const login = async (req, res) => {
         if (missingParam) return res.status(400).send({ error: missingParam });
 
         const results = await executeQuery(
-            'SELECT * FROM users WHERE username = ? AND password = ?',
+            'SELECT * FROM accounts WHERE username = ? AND password = ?',
             [username, password],
         );
 
         if (results.length === 0) return res.status(401).json({ error: 'Invalid credentials.' });
 
-        return res.status(200).send({ message: 'User logged in successfully', token: generateAccessToken(existingUser.id) });
+        return res.status(200).send({ message: 'User logged in successfully', token: generateAccessToken(results[0].id) });
     } catch (error) {
         return res.status(500).send({ error: error.message });
     }

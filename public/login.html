@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de sesión - Prueba técnica</title>
-    <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <!-- <script src="login.js" defer></script> -->
     
     <!-- Fuentes -->
@@ -36,7 +36,7 @@
                     <input type="password" name="password" id="password" placeholder="Contraseña" required>
                 </div>
 
-                <button class="login-field" type="button" value="Login" onclick="login()">Iniciar sesión</button>
+                <button class="login-field" type="button" value="login()" onclick="login()">Iniciar sesión</button>
             </form>
 
             <p class="loginError hidden">Error al iniciar sesión. Autenticación inválida.</p>
@@ -52,6 +52,9 @@
                 method: "POST",
                 body: JSON.stringify({username,password}),
                 headers: { "Content-Type": "application/json" }
+            }).then((response) => {
+                const json = JSON.parse(response)
+                window.location.href("./home.html");
             });
             console.log(res);
         }
