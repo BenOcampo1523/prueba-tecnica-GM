@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const mysqlConnection = require('../db/db');
-const validateRequiredParams = require('../utils/validateRequiredParams');
+const validateRequiredParams = require('../utils/validateRequiredParams')
 
 const generateAccessToken = (userId) => {
     return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -48,6 +48,5 @@ const login = async (req, res) => {
 };
 
 module.exports = {
-    register,
     login
 }

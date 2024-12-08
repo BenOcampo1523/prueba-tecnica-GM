@@ -2,8 +2,6 @@ const mysql = require("mysql");
 const config = require("./config");
 const createUserTable = require("../schemas/userSchema");
 
-console.log(config);
-
 const connectDB = async () => {
     const pool = mysql.createPool({
         host: process.env.HOST,
