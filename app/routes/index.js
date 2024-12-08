@@ -1,8 +1,15 @@
 const { Router } = require('express');
 const router = Router();
 
-const auth = require('./auth-routes');
+// Localhost + login
+const login = require('./auth-routes');
+router.use(login);
 
-router.use('/api', auth);
+// Localhost + home
+const home = require('./home-routes');
+router.use(home);
+
+const api = require('./api');
+router.use(api);
 
 module.exports = router;
