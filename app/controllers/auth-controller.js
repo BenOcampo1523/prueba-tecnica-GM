@@ -14,7 +14,7 @@ const login = async (req, res) => {
 
         const missingParam = validateRequiredParams(req.body, ["username", "password"]);
 
-        if (missingParam) return res.status(400).json({ error: missingParam });
+        if (missingParam) return res.status(400).send({ error: missingParam });
 
         const connection = mysqlConnection;
 
@@ -23,8 +23,8 @@ const login = async (req, res) => {
         connection.query(
             `SELECT * FROM accounts WHERE username=${username} AND password=${password};`,
             (error, results, _) => {
-                if (error) throw error;
-                if (results.length === 0) return res.status(401).json({ error: 'Invalid credentials.' });
+                if (error) return res.status(500).send({ error: error.message });
+                if (results.length === 0) return res.status(401).send({ error: 'Invalid credentials.' });
 
                 existingUser = results[0];
             }
@@ -32,7 +32,7 @@ const login = async (req, res) => {
 
         return res.status(200).send({ message: 'User logged in successfully', token: generateAccessToken(existingUser.id) });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).send({ error: error.message });
     }
 };
 
