@@ -5,10 +5,10 @@ const router = express.Router();
 
 const currentDir = process.cwd();
 
-router.use("/login", function(req,res) {
+router.use("/", function(req,res) {
     res.sendFile(path.resolve(__dirname, `${currentDir}/public/login.html`));
 })
 
-router.post("/login", login);
+router.post("/", login);
 
 module.exports = router;

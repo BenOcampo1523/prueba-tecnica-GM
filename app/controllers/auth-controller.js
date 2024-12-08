@@ -1,6 +1,7 @@
 // Importar utils
 const validateRequiredParams = require('../utils/validateRequiredParams');
 const executeQuery = require('../utils/executeQuery');
+const generateAccessToken = require('../utils/generateAccessToken');
 
 const login = async (req, res) => {
     try {
@@ -21,10 +22,10 @@ const login = async (req, res) => {
         const token = generateAccessToken(results[0].id);
 
         res.cookie('access-token', token, {
-            httpOnly: true,
-            maxAge: 3600 * 1000,
-            secure: false,
-            sameSite: 'lax',
+            httpOnly: true,                 // (true): La cookie no es accessible desde JS
+            maxAge: 3600 * 1000,            // Duración de la cookie (en ms)
+            secure: false,                  // Hacer la cookie disponible independientemente si es o no HTTPS
+            sameSite: 'lax',                // (lax): Restringir las cookies para uso entre sitios de terceros en contextos propios
         });
 
         return res.redirect('/home');
