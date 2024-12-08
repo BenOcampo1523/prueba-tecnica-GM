@@ -18,17 +18,19 @@ const login = async (req, res) => {
 
         const connection = mysqlConnection;
 
-        let existingUser = false;
-
-        connection.query(
+        const queryConsult = new Promise((resolve, reject) => connection.query(
             `SELECT * FROM accounts WHERE username=${username} AND password=${password};`,
             (error, results, _) => {
-                if (error) return res.status(500).send({ error: error.message });
-                if (results.length === 0) return res.status(401).send({ error: 'Invalid credentials.' });
+                if (error) reject(new Error('Invalid credentials.'));
+                if (results.length === 0) reject(new Error('Invalid credentials.'));
 
-                existingUser = results[0];
+                resolve(results[0]);
             }
-        );
+        ));
+
+        const existingUser = await queryConsult;
+
+        if (!existingUser) return res.status(401).json({ error: 'Invalid credentials.' });
 
         return res.status(200).send({ message: 'User logged in successfully', token: generateAccessToken(existingUser.id) });
     } catch (error) {
