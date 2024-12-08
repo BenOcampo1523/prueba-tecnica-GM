@@ -4,7 +4,7 @@ const createUserTable = require("../schemas/userSchema");
 
 console.log(config);
 
-const connectDB = async() => {
+const connectDB = async () => {
     const pool = mysql.createPool({
         host: process.env.HOST,
         user: process.env.USER,
@@ -18,28 +18,24 @@ const connectDB = async() => {
             if (err) {
                 console.log({ error: err.message });
             }
-    
+
             console.log("Connected to MySQL database");
         } catch (error) {
             console.error(error);
         }
     });
 
-    pool.query(createUserTable, function(error, results, fields) {
-        if(error) throw error;
+    pool.query(createUserTable, function (error, results, fields) {
+        if (error) throw error;
         console.log('Solución: ', results);
     });
-/*
-    const connection = mysql.createConnection(config);
-
-    connection.connect(function(err) {
-        if(err) {
-            console.error('Error al conectar.' + err.stack);
-            return;
-        }
-        console.log('Conectado como ID ' + connection.threadId);
-    })
-*/
 };
 
-module.exports = connectDB;
+const mysqlConnection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'login-info',
+    insecureAuth: true,
+});
+
+module.exports = mysqlConnection;
